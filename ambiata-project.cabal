@@ -24,7 +24,6 @@ library
                        src
 
   exposed-modules:
-                       Paths_ambiata_project
                        Project
 
 test-suite test
