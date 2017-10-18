@@ -1,0 +1,41 @@
+name:                  corba-runtime-wai
+version:               1.0.0
+license:               BSD3
+author:                Ambiata <info@ambiata.com>
+maintainer:            Ambiata <info@ambiata.com>
+copyright:             (c) 2017 Ambiata.
+synopsis:              corba-runtime-core
+category:              System
+cabal-version:         >= 1.8
+build-type:            Simple
+description:           corba-runtime-core
+
+library
+  build-depends:
+                       base                            >= 3          && < 5
+                     , ambiata-p
+                     , ambiata-x-eithert
+
+  ghc-options:
+                       -Wall
+
+  hs-source-dirs:
+                       src
+
+  exposed-modules:
+                       Corba.Runtime.Wai
+
+test-suite test
+  type:                exitcode-stdio-1.0
+
+  main-is:             test.hs
+
+  ghc-options:         -Wall -threaded -O2
+
+  hs-source-dirs:
+                       test
+
+  build-depends:
+                       base                            >= 3          && < 5
+                     , ambiata-disorder-core
+                     , ambiata-p

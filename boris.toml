@@ -13,6 +13,24 @@
 [build.branches-7-10-cli]
   command = [["master", "build", "branches-7-10", "-C", "corba-cli"]]
 
+[build.dist-7-10-runtime-core]
+  command = [["master", "build", "dist-7-10", "-C", "corba-runtime-core"]]
+
+[build.branches-7-10-runtime-core]
+  command = [["master", "build", "branches-7-10", "-C", "corba-runtime-core"]]
+
+[build.dist-7-10-runtime-wai]
+  command = [["master", "build", "dist-7-10", "-C", "corba-runtime-wai"]]
+
+[build.branches-7-10-runtime-wai]
+  command = [["master", "build", "branches-7-10", "-C", "corba-runtime-wai"]]
+
+[build.dist-7-10-runtime-client]
+  command = [["master", "build", "dist-7-10", "-C", "corba-runtime-client"]]
+
+[build.branches-7-10-runtime-client]
+  command = [["master", "build", "branches-7-10", "-C", "corba-runtime-client"]]
+
 
 [build.dist-8-0-core]
   command = [["master", "build", "dist-8-0", "-C", "corba-core"]]
@@ -25,6 +43,24 @@
 
 [build.branches-8-0-cli]
   command = [["master", "build", "branches-8-0", "-C", "corba-cli"]]
+
+[build.dist-8-0-runtime-core]
+  command = [["master", "build", "dist-8-0", "-C", "corba-runtime-core"]]
+
+[build.branches-8-0-runtime-core]
+  command = [["master", "build", "branches-8-0", "-C", "corba-runtime-core"]]
+
+[build.dist-8-0-runtime-wai]
+  command = [["master", "build", "dist-8-0", "-C", "corba-runtime-wai"]]
+
+[build.branches-8-0-runtime-wai]
+  command = [["master", "build", "branches-8-0", "-C", "corba-runtime-wai"]]
+
+[build.dist-8-0-runtime-client]
+  command = [["master", "build", "dist-8-0", "-C", "corba-runtime-client"]]
+
+[build.branches-8-0-runtime-client]
+  command = [["master", "build", "branches-8-0", "-C", "corba-runtime-client"]]
 
 
 [build.dist-validate]
