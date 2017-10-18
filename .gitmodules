@@ -7,3 +7,6 @@
 [submodule "lib/x"]
 	path = lib/x
 	url = git@github.com:ambiata/x
+[submodule "lib/machinator"]
+	path = lib/machinator
+	url = git@github.com:ambiata/machinator
