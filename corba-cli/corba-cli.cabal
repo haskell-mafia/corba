@@ -1,0 +1,27 @@
+name:                  corba-cli
+version:               1.0.0
+license:               BSD3
+author:                Ambiata <info@ambiata.com>
+maintainer:            Ambiata <info@ambiata.com>
+copyright:             (c) 2015 Ambiata.
+synopsis:              corba2000
+category:              System
+cabal-version:         >= 1.8
+build-type:            Custom
+description:           corba2000
+
+executable corba
+  hs-source-dirs:      gen
+  main-is:             ../main/corba.hs
+  ghc-options:         -Wall -threaded -O2
+
+  build-depends:
+                       base                            >= 3          && < 5
+                     , corba-core
+                     , ambiata-p
+                     , ambiata-x-eithert
+                     , ambiata-x-optparse
+                     , Glob                            >= 0.7        && < 1.0
+                     , optparse-applicative            >= 0.10       && < 1.0
+                     , text                            == 1.2.*
+                     , directory                       == 1.3.*
