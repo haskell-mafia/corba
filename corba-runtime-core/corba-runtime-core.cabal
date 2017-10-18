@@ -43,6 +43,7 @@ test-suite test
                      , corba-runtime-core
                      , containers                      >= 0.5.6      && < 0.6
                      , aeson
+                     , hashable                        >= 1.2        && < 2.0
                      , hedgehog                        >= 0.5        && < 1.0
                      , text                            == 1.2.*
                      , unordered-containers            >= 0.2        && < 0.3
