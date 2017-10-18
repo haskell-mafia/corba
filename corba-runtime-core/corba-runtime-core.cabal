@@ -40,4 +40,10 @@ test-suite test
 
   build-depends:
                        base                            >= 3          && < 5
-                     , ambiata-disorder-core
+                     , corba-runtime-core
+                     , containers                      >= 0.5.6      && < 0.6
+                     , aeson
+                     , hedgehog                        >= 0.5        && < 1.0
+                     , text                            == 1.2.*
+                     , unordered-containers            >= 0.2        && < 0.3
+                     , vector
