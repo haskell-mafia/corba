@@ -31,6 +31,9 @@ library
 
   exposed-modules:
                        Corba
+                       Corba.Data.Service
+                       Corba.Data.Transport
+                       Corba.Syntax.Service
 
 test-suite test
   type:                exitcode-stdio-1.0
