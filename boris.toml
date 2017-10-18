@@ -13,6 +13,20 @@
 [build.branches-7-10-cli]
   command = [["master", "build", "branches-7-10", "-C", "corba-cli"]]
 
+
+[build.dist-8-0-core]
+  command = [["master", "build", "dist-8-0", "-C", "corba-core"]]
+
+[build.branches-8-0-core]
+  command = [["master", "build", "branches-8-0", "-C", "corba-core"]]
+
+[build.dist-8-0-cli]
+  command = [["master", "build", "dist-8-0", "-C", "corba-cli"]]
+
+[build.branches-8-0-cli]
+  command = [["master", "build", "branches-8-0", "-C", "corba-cli"]]
+
+
 [build.dist-validate]
   command = [["validate-respect"]]
 
