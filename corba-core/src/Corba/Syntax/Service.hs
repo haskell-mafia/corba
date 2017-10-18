@@ -15,7 +15,6 @@ import qualified Data.Text as T
 
 import           P
 
-import           Text.Read (readMaybe)
 import           Text.Show.Pretty (ppShow)
 
 
