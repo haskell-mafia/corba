@@ -1,7 +1,7 @@
 {-# LANGUAGE GeneralizedNewtypeDeriving #-}
 {-# LANGUAGE NoImplicitPrelude #-}
 {-# LANGUAGE OverloadedStrings #-}
-module Corba.Data.Service (
+module Corba.Core.Data.Service (
     ServiceName (..)
   , Service (..)
   , Method (..)

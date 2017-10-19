@@ -1,7 +1,7 @@
 {-# LANGUAGE GeneralizedNewtypeDeriving #-}
 {-# LANGUAGE NoImplicitPrelude #-}
 {-# LANGUAGE OverloadedStrings #-}
-module Corba.Syntax.Service (
+module Corba.Core.Syntax.Service (
     ServiceParseError
   , renderServiceParseError
   , parseService
@@ -9,7 +9,7 @@ module Corba.Syntax.Service (
   ) where
 
 
-import           Corba.Data.Service
+import           Corba.Core.Data.Service
 
 import qualified Data.Text as T
 

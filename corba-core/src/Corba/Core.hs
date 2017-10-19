@@ -1,6 +1,6 @@
 {-# LANGUAGE NoImplicitPrelude #-}
 {-# LANGUAGE OverloadedStrings #-}
-module Corba (
+module Corba.Core (
     CorbaError
   , renderCorbaError
   , CorbaInput (..)
@@ -9,9 +9,9 @@ module Corba (
   ) where
 
 
-import           Corba.Data.Service
-import           Corba.Syntax.Service (ServiceParseError, renderServiceParseError)
-import qualified Corba.Syntax.Service as SS
+import           Corba.Core.Data.Service
+import           Corba.Core.Syntax.Service (ServiceParseError, renderServiceParseError)
+import qualified Corba.Core.Syntax.Service as SS
 
 import qualified Data.ByteString as B
 import qualified Data.Text as T

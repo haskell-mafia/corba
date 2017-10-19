@@ -30,10 +30,10 @@ library
                        src
 
   exposed-modules:
-                       Corba
-                       Corba.Data.Service
-                       Corba.Data.Transport
-                       Corba.Syntax.Service
+                       Corba.Core
+                       Corba.Core.Data.Service
+                       Corba.Core.Data.Transport
+                       Corba.Core.Syntax.Service
 
 test-suite test
   type:                exitcode-stdio-1.0

@@ -1,7 +1,7 @@
 {-# LANGUAGE GeneralizedNewtypeDeriving #-}
 {-# LANGUAGE NoImplicitPrelude #-}
 {-# LANGUAGE OverloadedStrings #-}
-module Corba.Data.Transport (
+module Corba.Core.Data.Transport (
     Transport (..)
   ) where
 
