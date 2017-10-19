@@ -31,6 +31,13 @@
 [build.branches-7-10-runtime-client]
   command = [["master", "build", "branches-7-10", "-C", "corba-runtime-client"]]
 
+[build.dist-7-10-codegen-aeson]
+  command = [["master", "build", "dist-7-10", "-C", "corba-codegen-aeson"]]
+
+[build.branches-7-10-codegen-aeson]
+  command = [["master", "build", "branches-7-10", "-C", "corba-codegen-aeson"]]
+
+
 
 [build.dist-8-0-core]
   command = [["master", "build", "dist-8-0", "-C", "corba-core"]]
@@ -61,6 +68,12 @@
 
 [build.branches-8-0-runtime-client]
   command = [["master", "build", "branches-8-0", "-C", "corba-runtime-client"]]
+
+[build.dist-8-0-codegen-aeson]
+  command = [["master", "build", "dist-8-0", "-C", "corba-codegen-aeson"]]
+
+[build.branches-8-0-codegen-aeson]
+  command = [["master", "build", "branches-8-0", "-C", "corba-codegen-aeson"]]
 
 
 [build.dist-validate]
