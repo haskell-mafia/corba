@@ -2,7 +2,10 @@
 {-# LANGUAGE NoImplicitPrelude #-}
 {-# LANGUAGE OverloadedStrings #-}
 {-# LANGUAGE RankNTypes #-}
-module Corba.Runtime.Wai.Json where
+module Corba.Runtime.Wai.Json (
+    JsonMethod (..)
+  , jsonV1
+  ) where
 
 
 import           Control.Applicative (pure)
@@ -23,8 +26,6 @@ import           Data.Maybe (Maybe (..), maybe)
 import           Data.Monoid ((<>))
 
 import           System.IO (IO)
-
--- import           Prelude
 
 
 data JsonMethod = forall a b. JsonMethod {

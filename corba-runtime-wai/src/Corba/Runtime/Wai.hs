@@ -2,7 +2,11 @@
 {-# LANGUAGE OverloadedStrings #-}
 {-# LANGUAGE PatternSynonyms #-}
 {-# LANGUAGE TupleSections #-}
-module Corba.Runtime.Wai where
+module Corba.Runtime.Wai (
+    Route
+  , RpcHandler
+  , middleware
+  ) where
 
 
 import           Control.Applicative (pure)
@@ -98,17 +102,9 @@ error400 :: Wai.Response
 error400 =
   plain HTTP.status400 "400 Bad Request"
 
-error403 :: Wai.Response
-error403 =
-  plain HTTP.status403 "403 Forbidden"
-
 error405 :: Wai.Response
 error405 =
   plain HTTP.status405 "405 Method Not Allowed"
-
-error413 :: Wai.Response
-error413 =
-  plain HTTP.status413 "413 Payload Too Large"
 
 error415 :: Wai.Response
 error415 =
