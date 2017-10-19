@@ -13,6 +13,7 @@ middleware, a client library, and documentation. This addresses a
 bunch of process problems:
 
 - [motivation](doc/motivation.md)
+- [versioning](doc/versioning.md)
 
 
 ## Example
