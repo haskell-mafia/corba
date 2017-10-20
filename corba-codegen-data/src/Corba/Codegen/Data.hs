@@ -1,9 +1,13 @@
 {-# LANGUAGE NoImplicitPrelude #-}
 {-# LANGUAGE OverloadedStrings #-}
 module Corba.Codegen.Data (
-    genTypesV1
+    genResultV1
+  , genServiceV1
   ) where
 
+
+import           Corba.Core
+import           Corba.Core.Data.Service
 
 import qualified Data.Char as Char
 import qualified Data.Text as T
@@ -16,6 +20,23 @@ import           P
 import qualified Language.Haskell.TH as TH
 import qualified X.Language.Haskell.TH.Syntax as XTH
 
+
+genResultV1 :: CorbaResult -> T.Text
+genResultV1 (CorbaResult s ds) =
+  T.unlines . fmap (T.pack . TH.pprint) . mconcat $ [
+      pure . genServiceV1 $ s
+    , fmap genTypesV1 ds
+    ]
+
+-- | Generate the service data type
+genServiceV1 :: Service -> TH.Dec
+genServiceV1 (Service (ServiceName n) ms) =
+  XTH.data_ (XTH.mkName_ n) [XTH.mkName_ "m"] . pure . XTH.recC_ (XTH.mkName_ n) $
+    with ms $ \(Method (MethodName mn) (TypeName req) (TypeName res)) ->
+      (,) (XTH.mkName_ mn) (XTH.arrowT_
+          (XTH.conT (XTH.mkName_ req))
+          (XTH.appT (TH.VarT . XTH.mkName_ $ "m") (XTH.conT (XTH.mkName_ res)))
+        )
 
 -- | Generate a TH type declaration from a Machinator 'Definition'.
 genTypesV1 :: Definition -> TH.Dec
