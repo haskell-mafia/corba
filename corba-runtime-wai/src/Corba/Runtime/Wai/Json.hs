@@ -17,14 +17,16 @@ import           Corba.Runtime.Wai.Data
 
 import qualified Data.Aeson as Aeson
 import qualified Data.Aeson.Types as Aeson
+import           Data.Bifunctor (first)
 import qualified Data.ByteString.Lazy as BSL
 import           Data.Char (Char)
-import           Data.Either (either)
+import           Data.Either (Either (..), either)
 import           Data.Function ((.), ($), flip)
 import           Data.Functor (fmap)
 import qualified Data.Map.Strict as M
-import           Data.Maybe (Maybe (..))
+import           Data.Maybe (Maybe (..), maybe)
 import           Data.Monoid ((<>))
+import           Data.Text (Text)
 import qualified Data.Text as T
 
 import           System.IO (IO)
@@ -73,10 +75,10 @@ encodeRpcResponseV1 :: RpcResponse Aeson.Value -> BSL.ByteString
 encodeRpcResponseV1 rsp =
   Aeson.encode (Json.rpcResponseToJson rsp)
 
-decodeRpcRequestV1 :: BSL.ByteString -> Maybe (RpcRequest Aeson.Value)
+decodeRpcRequestV1 :: BSL.ByteString -> Either Text (RpcRequest Aeson.Value)
 decodeRpcRequestV1 bs = do
-  value <- Aeson.decode' bs
-  Aeson.parseMaybe Json.rpcRequestFromJson value
+  value <- maybe (Left "Invalid JSON") Right (Aeson.decode' bs)
+  first T.pack (Aeson.parseEither Json.rpcRequestFromJson value)
 
 decodeErrorMessage :: MethodName -> [Char] -> ErrorMessage
 decodeErrorMessage (MethodName mn) err =

@@ -13,7 +13,7 @@ import           Corba.Runtime.Core.Data
 
 import           Data.ByteString (ByteString)
 import qualified Data.ByteString.Lazy as BSL
-import           Data.Maybe (Maybe)
+import           Data.Either (Either)
 import           Data.Text (Text)
 
 import           System.IO (IO)
@@ -26,6 +26,6 @@ type ContentType = ByteString
 data RpcHandler = forall a. RpcHandler {
     handleContentType :: ContentType
   , handleMethod :: RpcRequest a -> IO (RpcResponse a)
-  , handleRequest :: BSL.ByteString -> Maybe (RpcRequest a)
+  , handleRequest :: BSL.ByteString -> Either Text (RpcRequest a)
   , handleResponse :: RpcResponse a -> BSL.ByteString
   }

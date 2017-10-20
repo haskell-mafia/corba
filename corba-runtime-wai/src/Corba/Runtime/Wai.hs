@@ -17,6 +17,7 @@ import           Corba.Runtime.Wai.Data
 
 import           Data.ByteString (ByteString)
 import qualified Data.ByteString.Lazy as BSL
+import           Data.Either (Either (..))
 import           Data.Eq (Eq (..))
 import           Data.Function ((.), ($), flip)
 import           Data.Functor (fmap)
@@ -54,13 +55,13 @@ serveRequest handlers req =
                 -- This can use unbounded memory, be careful when exposing to the public
                 bs <- Wai.strictRequestBody req
                 case fun bs of
-                  Just doit -> do
+                  Right doit -> do
                     -- RPC response ready to send
                     (code, body) <- doit
                     pure $ respond code ctype body
-                  Nothing ->
+                  Left err ->
                     -- Failed to parse request
-                    pure error400
+                    pure $ plain HTTP.status400 err
               Nothing ->
                 -- Unsupported Content-Type
                 pure error415
@@ -71,12 +72,12 @@ serveRequest handlers req =
         -- Wasn't a POST
         pure error405
 
-buildRpcHandler :: [RpcHandler] -> (ContentType -> Maybe (BSL.ByteString -> Maybe (IO (HTTP.Status, BSL.ByteString))))
+buildRpcHandler :: [RpcHandler] -> (ContentType -> Maybe (BSL.ByteString -> Either Text (IO (HTTP.Status, BSL.ByteString))))
 buildRpcHandler handlers =
   flip M.lookup . M.fromList . flip fmap handlers $ \handler ->
     (handleContentType handler, handleRpc handler)
 
-handleRpc :: RpcHandler -> (BSL.ByteString -> Maybe (IO (HTTP.Status, BSL.ByteString)))
+handleRpc :: RpcHandler -> (BSL.ByteString -> Either Text (IO (HTTP.Status, BSL.ByteString)))
 handleRpc (RpcHandler _mime method request response) breq =
   flip fmap (request breq) $ \req ->
     fmap (\rsp -> (responseCode rsp, response rsp)) (method req)
@@ -97,10 +98,6 @@ responseCode rsp =
 header :: HTTP.HeaderName -> Wai.Request -> Maybe ByteString
 header hn req =
   L.lookup hn (Wai.requestHeaders req)
-
-error400 :: Wai.Response
-error400 =
-  plain HTTP.status400 "400 Bad Request"
 
 error405 :: Wai.Response
 error405 =
