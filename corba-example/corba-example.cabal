@@ -1,0 +1,61 @@
+name:                  corba-example
+version:               1.0.0
+license:               BSD3
+author:                Ambiata <info@ambiata.com>
+maintainer:            Ambiata <info@ambiata.com>
+copyright:             (c) 2015 Ambiata.
+synopsis:              corba2000
+category:              System
+cabal-version:         >= 1.8
+build-type:            Custom
+description:           corba2000
+
+library
+  build-depends:
+                       base                            >= 3          && < 5
+                     , corba-runtime-client
+                     , corba-runtime-core
+                     , corba-runtime-wai
+                     , transformers                    >= 0.4        && < 0.6
+
+  ghc-options:
+                       -Wall
+
+  hs-source-dirs:
+                       src
+
+  exposed-modules:
+                       Corba.Example.Client
+                       Corba.Example.Service
+
+executable corba-example-client
+  hs-source-dirs:      gen
+  main-is:             ../main/corba-example-client.hs
+  ghc-options:         -Wall -threaded -O2
+
+  build-depends:
+                       base                            >= 3          && < 5
+                     , corba-core
+                     , corba-example
+                     , corba-runtime-client
+                     , corba-runtime-core
+                     , http-client                     == 0.4.*
+                     , optparse-applicative            >= 0.10       && < 1.0
+                     , transformers
+
+executable corba-example-service
+  hs-source-dirs:      gen
+  main-is:             ../main/corba-example-service.hs
+  ghc-options:         -Wall -threaded -O2
+
+  build-depends:
+                       base                            >= 3          && < 5
+                     , corba-core
+                     , corba-example
+                     , corba-runtime-core
+                     , corba-runtime-wai
+                     , http-types                      >= 0.8        && < 0.10
+                     , http-client                     == 0.4.*
+                     , wai                             >= 3.0        && < 3.3
+                     , wai-extra                       == 3.0.*
+                     , warp                            >= 3.0        && < 3.3
