@@ -7,7 +7,7 @@ import           DependencyInfo_corba_cli
 
 import           Control.Monad.IO.Class (liftIO)
 
-import           Corba
+import           Corba.Core
 
 import qualified Data.Text as T
 import qualified Data.Text.IO as T
