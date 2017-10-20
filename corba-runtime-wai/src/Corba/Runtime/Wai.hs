@@ -92,6 +92,8 @@ responseCode rsp =
       HTTP.status500
     RpcMethodMissing _ ->
       HTTP.status404
+    RpcPayloadError _ ->
+      HTTP.status400
 
 -- -----------------------------------------------------------------------------
 

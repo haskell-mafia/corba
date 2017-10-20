@@ -9,6 +9,7 @@ module Corba.Runtime.Wai.Json (
 
 
 import           Control.Applicative (pure)
+import           Control.Monad.Trans.Bifunctor (firstT)
 import           Control.Monad.Trans.Except (ExceptT, runExceptT, throwE)
 
 import           Corba.Runtime.Core.Data
@@ -39,10 +40,14 @@ data JsonMethod = forall a b. JsonMethod {
   , jsonMethodEncode :: b -> Aeson.Value
   }
 
-runJsonMethod :: JsonMethod -> Aeson.Value -> ExceptT ErrorMessage IO Aeson.Value
+data JsonError =
+     JsonPayloadError ErrorMessage
+   | JsonUserError ErrorMessage
+
+runJsonMethod :: JsonMethod -> Aeson.Value -> ExceptT JsonError IO Aeson.Value
 runJsonMethod (JsonMethod n decode run encode) v = do
-  req <- either (throwE . decodeErrorMessage n) pure (Aeson.parseEither decode v)
-  rsp <- run req
+  req <- either (throwE . JsonPayloadError . payloadError n) pure (Aeson.parseEither decode v)
+  rsp <- firstT JsonUserError (run req)
   pure (encode rsp)
 
 jsonV1 :: [JsonMethod] -> RpcHandler
@@ -57,17 +62,23 @@ jsonV1 methods =
 rpcDispatchV1 :: [JsonMethod] -> (RpcRequest Aeson.Value -> IO (RpcResponse Aeson.Value))
 rpcDispatchV1 methods req =
   let
-    dispatchMap :: M.Map MethodName (Aeson.Value -> ExceptT ErrorMessage IO Aeson.Value)
+    dispatchMap :: M.Map MethodName (Aeson.Value -> ExceptT JsonError IO Aeson.Value)
     dispatchMap =
       M.fromList . flip fmap methods $ \method ->
         (jsonMethodName method, runJsonMethod method)
     methodName =
       rpcRequestMethod req
+    jsonError e =
+      case e of
+        JsonPayloadError pe ->
+          RpcPayloadError pe
+        JsonUserError ue ->
+          RpcError ue
   in
     case M.lookup methodName dispatchMap of
       Just method -> do
         eval <- runExceptT (method (rpcRequestPayload req))
-        pure $ either RpcError RpcResponseOk eval
+        pure $ either jsonError RpcResponseOk eval
       Nothing ->
         pure (RpcMethodMissing methodName)
 
@@ -80,8 +91,8 @@ decodeRpcRequestV1 bs = do
   value <- maybe (Left "Invalid JSON") Right (Aeson.decode' bs)
   first T.pack (Aeson.parseEither Json.rpcRequestFromJson value)
 
-decodeErrorMessage :: MethodName -> [Char] -> ErrorMessage
-decodeErrorMessage (MethodName mn) err =
+payloadError :: MethodName -> [Char] -> ErrorMessage
+payloadError (MethodName mn) err =
   ErrorMessage $
     T.unlines [
         "JSON_V1: Failed to decode request payload for method '" <> mn <> "':"

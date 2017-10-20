@@ -49,13 +49,18 @@ rpcResponseToJson response =
         ]
     RpcError (ErrorMessage msg) ->
       Aeson.object [
-          "response" .= ("error" :: Text)
+          "response" .= ("user-error" :: Text)
         , "error" .= msg
         ]
     RpcMethodMissing (MethodName method) ->
       Aeson.object [
           "response" .= ("method-missing" :: Text)
         , "method" .= method
+        ]
+    RpcPayloadError (ErrorMessage msg) ->
+      Aeson.object [
+          "response" .= ("payload-error" :: Text)
+        , "error" .= msg
         ]
 
 rpcResponseFromJson :: Aeson.Value -> Aeson.Parser (RpcResponse Aeson.Value)
@@ -67,12 +72,15 @@ rpcResponseFromJson v =
         "ok" ->
           RpcResponseOk
             <$> o .: "payload"
-        "error" ->
+        "user-error" ->
           RpcError
             <$> fmap ErrorMessage (o .: "error")
         "method-missing" ->
           RpcMethodMissing
             <$> fmap MethodName (o .: "method")
+        "payload-error" ->
+          RpcPayloadError
+            <$> fmap ErrorMessage (o .: "error")
         _ ->
           fail $ "RpcResponse.response: unexpected value '" ++ T.unpack response ++ "'"
     x ->
