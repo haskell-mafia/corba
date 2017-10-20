@@ -16,13 +16,13 @@ import qualified Corba.Runtime.Core.Json as Json
 
 import qualified Data.Aeson as Aeson
 import qualified Data.Aeson.Types as Aeson
-import qualified Data.ByteString.Lazy as BSL
-import qualified Data.Text as T
-
 import           Data.Bifunctor (first)
+import qualified Data.ByteString.Lazy as BSL
+import           Data.Either (Either (..))
 import           Data.Function ((.))
 import           Data.Functor (fmap)
-import           Data.Maybe (Maybe)
+import           Data.Maybe (maybe)
+import qualified Data.Text as T
 
 
 jsonCodecV1 :: RpcClientCodec Aeson.Value
@@ -37,10 +37,15 @@ encodeRpcRequestV1 :: RpcRequest Aeson.Value -> BSL.ByteString
 encodeRpcRequestV1 req =
   Aeson.encode (Json.rpcRequestToJson req)
 
-decodeRpcResponseV1 :: BSL.ByteString -> Maybe (RpcResponse Aeson.Value)
+decodeRpcResponseV1 :: BSL.ByteString -> Either ErrorMessage (RpcResponse Aeson.Value)
 decodeRpcResponseV1 bs = do
-  value <- Aeson.decode' bs
-  Aeson.parseMaybe Json.rpcResponseFromJson value
+  value <- maybe (Left messageError) pure (Aeson.decode' bs)
+  first (ErrorMessage . T.pack) (Aeson.parseEither Json.rpcResponseFromJson value)
+
+messageError :: ErrorMessage
+messageError =
+  ErrorMessage
+    "Invalid JSON"
 
 jsonRequest ::
      Monad m

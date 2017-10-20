@@ -10,7 +10,7 @@ import           Corba.Runtime.Core.Data
 
 import           Data.ByteString (ByteString)
 import qualified Data.ByteString.Lazy as BSL
-import           Data.Maybe (Maybe)
+import           Data.Either (Either)
 
 
 type ContentType = ByteString
@@ -18,5 +18,5 @@ type ContentType = ByteString
 data RpcClientCodec a = RpcClientCodec {
     codecContentType :: ContentType
   , codecRequest :: RpcRequest a -> BSL.ByteString
-  , codecResponse :: BSL.ByteString -> Maybe (RpcResponse a)
+  , codecResponse :: BSL.ByteString -> Either ErrorMessage (RpcResponse a)
   }

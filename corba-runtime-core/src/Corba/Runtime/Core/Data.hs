@@ -30,6 +30,7 @@ data RpcResponse a =
     RpcResponseOk a
   | RpcError ErrorMessage
   | RpcMethodMissing MethodName
+  | RpcPayloadError ErrorMessage
   deriving (Eq, Ord, Show, Functor, Foldable, Traversable)
 
 newtype MethodName = MethodName {

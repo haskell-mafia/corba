@@ -16,9 +16,9 @@ import           Corba.Runtime.Client.Data
 import           Corba.Runtime.Core.Data
 
 import qualified Data.ByteString.Lazy as BSL
-import           Data.Function (($))
+import           Data.Either (either)
+import           Data.Function (($), (.))
 import           Data.Int (Int)
-import           Data.Maybe (maybe)
 import           Data.Text (Text)
 
 import qualified Network.HTTP.Client as HTTP
@@ -27,8 +27,9 @@ import qualified Network.HTTP.Types as HTTP
 
 data ClientError =
     ClientUserError ErrorMessage
+  | ClientPayloadError ErrorMessage
   | ClientMethodMissing MethodName
-  | ClientMessageDecodeError
+  | ClientMessageDecodeError ErrorMessage
   | ClientUnexpectedStatusCode Int
   | ClientSerialisationError Text
 
@@ -46,7 +47,7 @@ send mgr codec req = do
     }
   let
     rpcResponse =
-      maybe (throwE ClientMessageDecodeError) pure $ codecResponse codec (HTTP.responseBody resp)
+      either (throwE . ClientMessageDecodeError) pure $ codecResponse codec (HTTP.responseBody resp)
     hoistResponse r =
       case r of
         RpcResponseOk a ->
@@ -55,6 +56,8 @@ send mgr codec req = do
           throwE (ClientUserError e)
         RpcMethodMissing m ->
           throwE (ClientMethodMissing m)
+        RpcPayloadError e ->
+          throwE (ClientPayloadError e)
   case HTTP.statusCode (HTTP.responseStatus resp) of
     200 ->
       hoistResponse =<< rpcResponse
