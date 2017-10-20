@@ -17,9 +17,12 @@ import           Corba.Runtime.Core.Data
 
 import qualified Data.ByteString.Lazy as BSL
 import           Data.Either (either)
+import           Data.Eq (Eq)
 import           Data.Function (($), (.))
 import           Data.Int (Int)
 import           Data.Text (Text)
+
+import           Text.Show (Show)
 
 import qualified Network.HTTP.Client as HTTP
 import qualified Network.HTTP.Types as HTTP
@@ -32,6 +35,7 @@ data ClientError =
   | ClientMessageDecodeError ErrorMessage
   | ClientUnexpectedStatusCode Int
   | ClientSerialisationError Text
+  deriving (Eq, Show)
 
 newtype RequestModifier m =
   RequestModifier {
