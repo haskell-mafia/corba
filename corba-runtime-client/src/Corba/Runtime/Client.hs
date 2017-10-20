@@ -3,6 +3,7 @@
 module Corba.Runtime.Client (
     ClientError (..)
   , RequestModifier (..)
+  , send
   ) where
 
 
@@ -18,6 +19,7 @@ import qualified Data.ByteString.Lazy as BSL
 import           Data.Function (($))
 import           Data.Int (Int)
 import           Data.Maybe (maybe)
+import           Data.Text (Text)
 
 import qualified Network.HTTP.Client as HTTP
 import qualified Network.HTTP.Types as HTTP
@@ -28,6 +30,7 @@ data ClientError =
   | ClientMethodMissing MethodName
   | ClientMessageDecodeError
   | ClientUnexpectedStatusCode Int
+  | ClientSerialisationError Text
 
 newtype RequestModifier m =
   RequestModifier {
