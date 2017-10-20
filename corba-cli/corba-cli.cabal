@@ -18,6 +18,8 @@ executable corba
   build-depends:
                        base                            >= 3          && < 5
                      , corba-core
+                     , corba-codegen-aeson
+                     , corba-codegen-data
                      , ambiata-p
                      , ambiata-x-eithert
                      , ambiata-x-optparse

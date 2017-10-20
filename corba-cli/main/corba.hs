@@ -8,6 +8,8 @@ import           DependencyInfo_corba_cli
 import           Control.Monad.IO.Class (liftIO)
 
 import           Corba.Core
+import qualified Corba.Codegen.Aeson as Aeson
+import qualified Corba.Codegen.Data as Data
 
 import qualified Data.Text as T
 import qualified Data.Text.IO as T
@@ -82,7 +84,8 @@ run (CorbaOpts service dataGlob) =
         , corbaData = dfs
         }
     out <- firstT CorbaError $ corba cinput
-    liftIO $ IO.print out
+    liftIO . T.putStrLn $ Aeson.generateAesonModuleV1 out
+    liftIO . T.putStrLn $ Data.genResultV1 out
 
 -- -----------------------------------------------------------------------------
 
