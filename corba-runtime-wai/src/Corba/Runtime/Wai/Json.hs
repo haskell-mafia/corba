@@ -18,12 +18,14 @@ import           Corba.Runtime.Wai.Data
 import qualified Data.Aeson as Aeson
 import qualified Data.Aeson.Types as Aeson
 import qualified Data.ByteString.Lazy as BSL
+import           Data.Char (Char)
 import           Data.Either (either)
 import           Data.Function ((.), ($), flip)
 import           Data.Functor (fmap)
 import qualified Data.Map.Strict as M
-import           Data.Maybe (Maybe (..), maybe)
+import           Data.Maybe (Maybe (..))
 import           Data.Monoid ((<>))
+import qualified Data.Text as T
 
 import           System.IO (IO)
 
@@ -37,7 +39,7 @@ data JsonMethod = forall a b. JsonMethod {
 
 runJsonMethod :: JsonMethod -> Aeson.Value -> ExceptT ErrorMessage IO Aeson.Value
 runJsonMethod (JsonMethod n decode run encode) v = do
-  req <- maybe (throwE (decodeErrorMessage n)) pure (Aeson.parseMaybe decode v)
+  req <- either (throwE . decodeErrorMessage n) pure (Aeson.parseEither decode v)
   rsp <- run req
   pure (encode rsp)
 
@@ -76,7 +78,10 @@ decodeRpcRequestV1 bs = do
   value <- Aeson.decode' bs
   Aeson.parseMaybe Json.rpcRequestFromJson value
 
-decodeErrorMessage :: MethodName -> ErrorMessage
-decodeErrorMessage (MethodName mn) =
+decodeErrorMessage :: MethodName -> [Char] -> ErrorMessage
+decodeErrorMessage (MethodName mn) err =
   ErrorMessage $
-    "JSON_V1: Failed to decode request for method '" <> mn <> "'"
+    T.unlines [
+        "JSON_V1: Failed to decode request payload for method '" <> mn <> "':"
+      , "  " <> T.pack err
+      ]
