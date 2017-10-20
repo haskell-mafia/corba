@@ -41,7 +41,7 @@ Service definition:
 
 ```haskell
 Service {
-  serviceName = ServiceName "hello"
+  serviceName = ServiceName "greeting"
 , serviceMethods = [
     Method {
         methodName = MethodName "hello"
@@ -74,24 +74,28 @@ record Message = {
 data ResponseMsg =
     Worked
   | Failed
+
+-- (Ditto for the Goodbye Request
+--  and Response definitions.)
 ```
 
 Generated abstract interface:
 
 ```haskell
-data HelloService m = HelloService {
+data GreetingService m = GreetingService {
     hello :: HelloRequest -> m HelloResponse
+  , goodbye :: GoodbyeRequest -> m GoodbyeResponse
   }
 ```
 
 Generated WAI middleware:
 
 ```haskell
-helloMiddleware :: Route -> HelloService (ExceptT ErrorMessage IO) -> (Wai.Application -> Wai.Application)
+greetingMiddleware :: Route -> GreetingService (ExceptT ErrorMessage IO) -> (Wai.Application -> Wai.Application)
 ```
 
 Generated client:
 
 ```haskell
-helloClient :: Monad m => HelloService (HttpApi m)
+greetingClient :: Monad m => GreetingService (HttpApi m)
 ```
