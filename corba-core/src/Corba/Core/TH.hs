@@ -7,7 +7,6 @@ import           Control.Monad.Trans.Except (runExceptT)
 
 import           Corba.Core
 
-import           Data.Foldable (for_)
 import qualified Data.Text as T
 
 import           Language.Haskell.TH (Q, Exp, Dec)
