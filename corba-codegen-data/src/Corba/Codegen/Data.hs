@@ -4,6 +4,7 @@ module Corba.Codegen.Data (
     generateDataModuleV1
   , generateDataV1
   , generateDefinitionV1
+  , generateServiceNameV1
   ) where
 
 
@@ -37,17 +38,22 @@ generateDataV1 (CorbaResult svc defs) =
     , fmap generateDefinitionV1 defs
     ]
 
--- | Generateerate the service data type
+generateServiceNameV1 :: ServiceName -> TH.Name
+generateServiceNameV1 (ServiceName n) =
+  XTH.mkName_ $
+    T.toTitle n <> "Service"
+
+-- | Generate the service data type
 generateServiceV1 :: Service -> TH.Dec
-generateServiceV1 (Service (ServiceName n) ms) =
-  XTH.data_ (XTH.mkName_ (T.toTitle n <> "Service")) [XTH.mkName_ "m"] . pure . XTH.recC_ (XTH.mkName_ (T.toTitle n <> "Service")) $
+generateServiceV1 (Service n ms) =
+  XTH.data_ (generateServiceNameV1 n) [XTH.mkName_ "m"] . pure . XTH.recC_ (generateServiceNameV1 n) $
     with ms $ \(Method (MethodName mn) (TypeName req) (TypeName res)) ->
       (,) (XTH.mkName_ mn) (XTH.arrowT_
           (XTH.conT (XTH.mkName_ req))
           (XTH.appT (TH.VarT . XTH.mkName_ $ "m") (XTH.conT (XTH.mkName_ res)))
         )
 
--- | Generateerate a TH type declaration from a Machinator 'Definition'.
+-- | Generate a TH type declaration from a Machinator 'Definition'.
 generateDefinitionV1 :: Definition -> TH.Dec
 generateDefinitionV1 (Definition nn@(Name n) d) =
   case d of
@@ -56,12 +62,12 @@ generateDefinitionV1 (Definition nn@(Name n) d) =
     Record fts ->
       XTH.data_ (XTH.mkName_ n) [] [generateRecV1 nn fts]
 
--- | Generateerate a regular variant constructor.
+-- | Generate a regular variant constructor.
 generateConV1 :: Name -> [Type] -> TH.Con
 generateConV1 (Name n) ts =
   XTH.normalC_' (XTH.mkName_ n) (fmap generateTypeV1 ts)
 
--- | Generateerate a record constructor.
+-- | Generate a record constructor.
 generateRecV1 :: Name -> [(Name, Type)] -> TH.Con
 generateRecV1 nn@(Name n) fts =
   XTH.recC_' (XTH.mkName_ n) (fmap (bimap (generateRecFieldNameV1 nn) generateTypeV1) fts)

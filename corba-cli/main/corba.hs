@@ -10,6 +10,7 @@ import           Control.Monad.IO.Class (liftIO)
 import           Corba.Core
 import qualified Corba.Codegen.Aeson as Aeson
 import qualified Corba.Codegen.Data as Data
+import qualified Corba.Codegen.Wai.Json as Wai
 
 import qualified Data.Text as T
 import qualified Data.Text.IO as T
@@ -86,6 +87,8 @@ run (CorbaOpts service dataGlob) =
     out <- firstT CorbaError $ corba cinput
     liftIO . T.putStrLn $ Aeson.generateAesonModuleV1 out
     liftIO . T.putStrLn $ Data.generateDataModuleV1 out
+    -- FIXME this produces an invalid module
+    liftIO . T.putStrLn $ Wai.generateWaiModuleV1 out
 
 -- -----------------------------------------------------------------------------
 
