@@ -7,10 +7,12 @@ import           Control.Monad.Trans.Except (runExceptT)
 
 import           Corba.Core
 
+import           Data.Foldable (for_)
 import qualified Data.Text as T
 
 import           Language.Haskell.TH (Q, Exp, Dec)
 import qualified Language.Haskell.TH as TH
+import qualified Language.Haskell.TH.Syntax as TH
 
 import           P
 
@@ -25,6 +27,7 @@ loadService srv mcn =
 
 loadService' :: FilePath -> [FilePath] -> (CorbaResult -> Q a) -> Q a
 loadService' srv mcn f = do
+   for_ (srv:mcn) TH.addDependentFile
    result <- TH.runIO $ runExceptT (corba (CorbaInput srv mcn))
    case result of
      Left err ->
