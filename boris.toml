@@ -37,6 +37,25 @@
 [build.branches-7-10-codegen-aeson]
   command = [["master", "build", "branches-7-10", "-C", "corba-codegen-aeson"]]
 
+[build.dist-7-10-codegen-data]
+  command = [["master", "build", "dist-7-10", "-C", "corba-codegen-data"]]
+
+[build.branches-7-10-codegen-data]
+  command = [["master", "build", "branches-7-10", "-C", "corba-codegen-data"]]
+
+[build.dist-7-10-codegen-client]
+  command = [["master", "build", "dist-7-10", "-C", "corba-codegen-client"]]
+
+[build.branches-7-10-codegen-client]
+  command = [["master", "build", "branches-7-10", "-C", "corba-codegen-client"]]
+
+[build.dist-7-10-codegen-wai]
+  command = [["master", "build", "dist-7-10", "-C", "corba-codegen-wai"]]
+
+[build.branches-7-10-codegen-wai]
+  command = [["master", "build", "branches-7-10", "-C", "corba-codegen-wai"]]
+
+
 [build.dist-7-10-example]
   command = [["master", "build", "dist-7-10", "-C", "corba-example"]]
 
@@ -86,6 +105,20 @@
 
 [build.branches-8-0-codegen-data]
   command = [["master", "build", "branches-8-0", "-C", "corba-codegen-data"]]
+
+[build.dist-8-0-codegen-client]
+  command = [["master", "build", "dist-8-0", "-C", "corba-codegen-client"]]
+
+[build.branches-8-0-codegen-client]
+  command = [["master", "build", "branches-8-0", "-C", "corba-codegen-client"]]
+
+[build.dist-8-0-codegen-wai]
+  command = [["master", "build", "dist-8-0", "-C", "corba-codegen-wai"]]
+
+[build.branches-8-0-codegen-wai]
+  command = [["master", "build", "branches-8-0", "-C", "corba-codegen-wai"]]
+
+
 
 [build.dist-8-0-example]
   command = [["master", "build", "dist-8-0", "-C", "corba-example"]]
