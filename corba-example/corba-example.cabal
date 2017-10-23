@@ -13,6 +13,11 @@ description:           corba2000
 library
   build-depends:
                        base                            >= 3          && < 5
+                     , aeson
+                     , corba-codegen-aeson
+                     , corba-codegen-client
+                     , corba-codegen-data
+                     , corba-codegen-wai
                      , corba-runtime-client
                      , corba-runtime-core
                      , corba-runtime-wai
@@ -26,6 +31,8 @@ library
 
   exposed-modules:
                        Corba.Example.Client
+                       Corba.Example.Data
+                       Corba.Example.Json
                        Corba.Example.Service
 
 executable corba-example-client
