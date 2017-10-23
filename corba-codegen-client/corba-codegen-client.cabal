@@ -20,6 +20,7 @@ library
                      , containers                      == 0.5.*
                      , corba-core
                      , corba-codegen-aeson
+                     , corba-codegen-data
                      , template-haskell
                      , text                            == 1.2.*
 
@@ -30,7 +31,7 @@ library
                        src
 
   exposed-modules:
-                       Corba.Codegen.Client
+                       Corba.Codegen.Client.Json
 
 test-suite test
   type:                exitcode-stdio-1.0
