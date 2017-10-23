@@ -71,3 +71,18 @@ executable corba-example-service
                      , wai                             >= 3.0        && < 3.3
                      , wai-extra                       == 3.0.*
                      , warp                            >= 3.0        && < 3.3
+
+
+test-suite test-cli
+  type:                exitcode-stdio-1.0
+
+  main-is:             test-cli.hs
+
+  ghc-options:         -Wall -threaded -O2
+
+  hs-source-dirs:
+                       test
+
+  build-depends:
+                       base                            >= 3          && < 5
+                     , ambiata-disorder-core

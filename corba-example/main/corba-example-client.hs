@@ -10,10 +10,13 @@ import           Corba.Runtime.Client
 
 import           Data.Either (Either (..))
 import           Data.Function (($), (.), flip)
+import           Data.Functor (fmap)
+import qualified Data.Text as T
 import qualified Data.Text.IO as T
 
 import           Network.HTTP.Client as HTTP.Client
 
+import qualified System.Environment as Environment
 import           System.IO (IO)
 import qualified System.IO as IO
 
@@ -21,6 +24,7 @@ main :: IO ()
 main = do
   IO.hSetBuffering IO.stdout IO.LineBuffering
   IO.hSetBuffering IO.stderr IO.LineBuffering
+  args <- Environment.getArgs
   mgr <- HTTP.Client.newManager HTTP.Client.defaultManagerSettings
   let
     initRequest req =
@@ -29,7 +33,7 @@ main = do
       Client.exampleClientJsonV1 $
         RequestModifier (flip HTTP.Client.httpLbs mgr . initRequest)
 
-  r <- runExceptT $ ping client (PingRequestV1 "Hello, world!")
+  r <- runExceptT $ ping client (PingRequestV1 . T.intercalate " " . fmap T.pack $ args)
 
   case r of
     Left e ->
