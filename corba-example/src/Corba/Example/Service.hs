@@ -1,24 +1,17 @@
-{- WARNING: This file is/will-be generated -}
-
-{-# LANGUAGE NoImplicitPrelude #-}
 {-# LANGUAGE OverloadedStrings #-}
+{-# LANGUAGE TemplateHaskell #-}
 module Corba.Example.Service where
 
 
-import           Control.Applicative (pure)
+import           Control.Monad.Trans.Except (ExceptT)
 
+import           Corba.Core.TH (withService)
+import qualified Corba.Codegen.Wai.Json as Wai
+import           Corba.Example.Data
+import           Corba.Example.Json
 import           Corba.Runtime.Core.Data
 import           Corba.Runtime.Wai.Data
 import           Corba.Runtime.Wai.Json
 
-methods :: [RpcHandler]
-methods =
-  [jsonV1 [method1]]
 
-method1 :: JsonMethod
-method1 =
-  JsonMethod
-    (MethodName "a")
-    (\_ -> pure ())
-    (\() -> pure ())
-    (\() -> "")
+$(withService "service/example.corba" ["service/example.mcn"] Wai.generateWaiV1)

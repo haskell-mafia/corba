@@ -2,14 +2,15 @@
 {-# LANGUAGE OverloadedStrings #-}
 
 
-import           Control.Applicative (pure)
 import           Control.Monad.Trans.Except (runExceptT)
 
-import           Corba.Example.Client
+import qualified Corba.Example.Client as Client
+import           Corba.Example.Data
 import           Corba.Runtime.Client
 
 import           Data.Either (Either (..))
 import           Data.Function (($), (.), flip)
+import qualified Data.Text.IO as T
 
 import           Network.HTTP.Client as HTTP.Client
 
@@ -24,10 +25,14 @@ main = do
   let
     initRequest req =
       req { HTTP.Client.port = 8080, HTTP.Client.path = "/rpc" }
-  r <- runExceptT . method1 $
-    RequestModifier (flip HTTP.Client.httpLbs mgr . initRequest)
+    client =
+      Client.exampleClientJsonV1 $
+        RequestModifier (flip HTTP.Client.httpLbs mgr . initRequest)
+
+  r <- runExceptT $ ping client (PingRequestV1 "Hello, world!")
+
   case r of
     Left e ->
       IO.print e
-    Right () ->
-      pure ()
+    Right (PingResponseV1 msg) ->
+      T.putStrLn msg

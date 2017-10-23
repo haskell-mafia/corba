@@ -1,0 +1,10 @@
+Service {
+  serviceName = ServiceName "example"
+, serviceMethods = [
+    Method {
+      methodName = MethodName "ping"
+    , methodRequest = TypeName "PingRequest"
+    , methodResponse = TypeName "PingResponse"
+    }
+  ]
+}

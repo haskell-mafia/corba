@@ -91,7 +91,7 @@ clientMonad =
     (XTH.appT
       (XTH.conT (TH.mkName "ExceptT"))
       (XTH.conT (TH.mkName "ClientError")))
-    (XTH.conT (TH.mkName "IO"))
+    (TH.VarT (TH.mkName "m"))
 
 clientBound :: TH.Name
 clientBound =

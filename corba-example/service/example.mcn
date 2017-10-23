@@ -1,0 +1,7 @@
+-- machinator @ v2
+
+data PingRequest =
+  PingRequestV1 String
+
+data PingResponse =
+  PingResponseV1 String
