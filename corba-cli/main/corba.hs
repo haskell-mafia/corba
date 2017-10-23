@@ -85,7 +85,7 @@ run (CorbaOpts service dataGlob) =
         }
     out <- firstT CorbaError $ corba cinput
     liftIO . T.putStrLn $ Aeson.generateAesonModuleV1 out
-    liftIO . T.putStrLn $ Data.genResultV1 out
+    liftIO . T.putStrLn $ Data.generateDataModuleV1 out
 
 -- -----------------------------------------------------------------------------
 
