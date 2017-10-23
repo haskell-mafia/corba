@@ -19,7 +19,9 @@ executable corba
                        base                            >= 3          && < 5
                      , corba-core
                      , corba-codegen-aeson
+                     , corba-codegen-client
                      , corba-codegen-data
+                     , corba-codegen-wai
                      , ambiata-p
                      , ambiata-x-eithert
                      , ambiata-x-optparse
