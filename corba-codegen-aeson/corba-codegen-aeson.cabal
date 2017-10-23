@@ -13,6 +13,7 @@ description:           corba-codegen-aeson
 library
   build-depends:
                        base                            >= 3          && < 5
+                     , aeson                           >= 0.8        && < 1.3
                      , ambiata-machinator-core
                      , ambiata-p
                      , ambiata-x-templatehaskell

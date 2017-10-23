@@ -31,7 +31,7 @@ genResultV1 (CorbaResult s ds) =
 -- | Generate the service data type
 genServiceV1 :: Service -> TH.Dec
 genServiceV1 (Service (ServiceName n) ms) =
-  XTH.data_ (XTH.mkName_ n) [XTH.mkName_ "m"] . pure . XTH.recC_ (XTH.mkName_ n) $
+  XTH.data_ (XTH.mkName_ (T.toTitle n <> "Service")) [XTH.mkName_ "m"] . pure . XTH.recC_ (XTH.mkName_ (T.toTitle n <> "Service")) $
     with ms $ \(Method (MethodName mn) (TypeName req) (TypeName res)) ->
       (,) (XTH.mkName_ mn) (XTH.arrowT_
           (XTH.conT (XTH.mkName_ req))
