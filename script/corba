@@ -1,0 +1,114 @@
+#!/bin/sh -eu
+
+: ${CORBA_HOME:=$HOME/.corba}
+CORBA_DIR="$(git rev-parse --show-toplevel)/lib/corba"
+
+latest_version () {
+  git submodule status | grep "corba " | cut -c 2-41
+}
+
+local_version () {
+  awk '/^# Version: / { print $3; exit 0; }' $0
+}
+
+run_upgrade () {
+  CORBA_TEMP=$(mktemp 2>/dev/null || mktemp -t 'upgrade_corba')
+
+  clean_up () {
+    rm -f "$CORBA_TEMP"
+  }
+
+  trap clean_up EXIT
+
+  CORBA_CUR="$0"
+
+  if [ -L "$CORBA_CUR" ]; then
+    echo 'Refusing to overwrite a symlink; run `upgrade` from the canonical path.' >&2
+    exit 1
+  fi
+
+  echo "Checking for a new version of corba ..."
+  cp "${CORBA_DIR}/script/corba" $CORBA_TEMP
+
+  LATEST_VERSION=$(latest_version)
+  echo "# Version: $LATEST_VERSION" >> $CORBA_TEMP
+
+  if ! cmp $CORBA_CUR $CORBA_TEMP >/dev/null 2>&1; then
+    mv $CORBA_TEMP $CORBA_CUR
+    chmod +x $CORBA_CUR
+    echo "New version found and upgraded. You can now commit it to your git repo."
+  else
+    echo "You have latest corba."
+  fi
+}
+
+exec_corba () {
+  CORBA_VERSION=$(local_version)
+
+  if [ "x$CORBA_VERSION" = "x" ]; then
+    # If we can't find the corba version, then we need to upgrade the script.
+    run_upgrade
+  else
+    CORBA_BIN=$CORBA_HOME/bin
+    CORBA_FILE=corba-$CORBA_VERSION
+    CORBA_PATH=$CORBA_BIN/$CORBA_FILE
+
+    [ -f "$CORBA_PATH" ] || {
+
+      # Create a temporary file in CORBA_BIN so we can do an atomic copy/move dance.
+      mkdir -p $CORBA_BIN
+
+      echo "Building $CORBA_FILE in $CORBA_DIR"
+
+      ( cd $CORBA_DIR
+        bin/bootstrap ) || exit $?
+
+      CORBA_PATH_TEMP=$(mktemp --tmpdir=$CORBA_BIN $CORBA_FILE-XXXXXX 2>/dev/null || TMPDIR=$CORBA_BIN mktemp -t $CORBA_FILE)
+
+      clean_up_temp () {
+        rm -f "$CORBA_PATH_TEMP"
+      }
+      trap clean_up_temp EXIT
+
+      cp "${CORBA_DIR}/corba-cli/dist/build/corba/corba" "$CORBA_PATH_TEMP"
+      chmod 755 "$CORBA_PATH_TEMP"
+      mv "$CORBA_PATH_TEMP" "$CORBA_PATH"
+
+      clean_up_temp
+    }
+
+    exec $CORBA_PATH "$@"
+  fi
+}
+
+initialize () {
+
+  PROJECT_ROOT=$(git rev-parse --show-toplevel)
+
+  # init any submodules that we need. Don't worry about explicit submodules
+  # file here, we just want to trust git to tell us things that haven't been
+  # initialized, we really _don't_ want to run this just because a module is
+  # dirty from development changes etc...
+
+  UNINITIALIZED=$(cd "$PROJECT_ROOT" && git submodule | grep "^-" | cut -d ' ' -f 2)
+  for submodule in $UNINITIALIZED; do
+    (cd "$PROJECT_ROOT" && git submodule update --init $submodule) || exit $?
+  done
+}
+
+#
+# The actual start of the script.....
+#
+
+if [ $# -gt 0 ]; then
+  MODE="$1"
+else
+  MODE=""
+fi
+
+initialize
+
+case "$MODE" in
+upgrade) shift; run_upgrade "$@" ;;
+*) exec_corba "$@"
+esac
