@@ -165,7 +165,7 @@ typeFromJson ty =
     M.Variable n ->
       XTH.varE (generateFromJsonNameV1 n)
     M.ListT t2 ->
-      fmap_ (typeFromJson t2)
+      mapM__ (typeFromJson t2)
     M.GroundT g ->
       case g of
         M.StringT ->
@@ -191,6 +191,11 @@ field fn v =
 fieldPats :: [[Char]]
 fieldPats =
   fmap (("f" <>) . show) (L.iterate (+1) (1::Int))
+
+mapM__ :: Exp -> Exp
+mapM__ =
+  XTH.appE
+    (XTH.varE (TH.mkName "Control.Monad.mapM"))
 
 fmap_ :: Exp -> Exp
 fmap_ f =
