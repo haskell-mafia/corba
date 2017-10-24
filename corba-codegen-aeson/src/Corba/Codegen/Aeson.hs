@@ -157,7 +157,7 @@ fromJsonFields (M.Name n) fts =
       TH.DoE $
            (flip fmap fts $ \(fn, ft) ->
              TH.BindS (XTH.varP (TH.mkName fn)) (parseFieldWith (XTH.varE (TH.mkName "f")) (T.pack fn) (typeFromJson ft)))
-        <> [TH.NoBindS (return_ (XTH.applyE (XTH.varE (XTH.mkName_ n)) (fmap (XTH.varE . TH.mkName . fst) fts)))]
+        <> [TH.NoBindS (return_ (XTH.applyE (XTH.conE (XTH.mkName_ n)) (fmap (XTH.varE . TH.mkName . fst) fts)))]
 
 typeFromJson :: M.Type -> Exp
 typeFromJson ty =

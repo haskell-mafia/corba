@@ -13,9 +13,16 @@ description:           corba2000
 library
   build-depends:
                        base                            >= 3          && < 5
+                     , aeson
+                     , corba-core
+                     , corba-codegen-aeson
+                     , corba-codegen-client
+                     , corba-codegen-data
+                     , corba-codegen-wai
                      , corba-runtime-client
                      , corba-runtime-core
                      , corba-runtime-wai
+                     , text                            == 1.2.*
                      , transformers                    >= 0.4        && < 0.6
 
   ghc-options:
@@ -26,6 +33,8 @@ library
 
   exposed-modules:
                        Corba.Example.Client
+                       Corba.Example.Data
+                       Corba.Example.Json
                        Corba.Example.Service
 
 executable corba-example-client
@@ -41,6 +50,7 @@ executable corba-example-client
                      , corba-runtime-core
                      , http-client                     == 0.4.*
                      , optparse-applicative            >= 0.10       && < 1.0
+                     , text                            == 1.2.*
                      , transformers
 
 executable corba-example-service
@@ -56,6 +66,23 @@ executable corba-example-service
                      , corba-runtime-wai
                      , http-types                      >= 0.8        && < 0.10
                      , http-client                     == 0.4.*
+                     , text                            == 1.2.*
+                     , transformers
                      , wai                             >= 3.0        && < 3.3
                      , wai-extra                       == 3.0.*
                      , warp                            >= 3.0        && < 3.3
+
+
+test-suite test-cli
+  type:                exitcode-stdio-1.0
+
+  main-is:             test-cli.hs
+
+  ghc-options:         -Wall -threaded -O2
+
+  hs-source-dirs:
+                       test
+
+  build-depends:
+                       base                            >= 3          && < 5
+                     , ambiata-disorder-core

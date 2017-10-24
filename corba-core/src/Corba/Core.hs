@@ -1,3 +1,5 @@
+{-# LANGUAGE DeriveDataTypeable #-}
+{-# LANGUAGE DeriveGeneric #-}
 {-# LANGUAGE NoImplicitPrelude #-}
 {-# LANGUAGE OverloadedStrings #-}
 module Corba.Core (
@@ -14,9 +16,12 @@ import           Corba.Core.Syntax.Service (ServiceParseError, renderServicePars
 import qualified Corba.Core.Syntax.Service as SS
 
 import qualified Data.ByteString as B
+import           Data.Data (Data, Typeable)
 import qualified Data.Text as T
 import qualified Data.Text.Encoding as TE
 import           Data.Text.Encoding.Error (UnicodeException)
+
+import           GHC.Generics (Generic)
 
 import           Machinator.Core (MachinatorError, renderMachinatorError)
 import qualified Machinator.Core as Machinator
@@ -49,12 +54,12 @@ renderCorbaError ce =
 data CorbaInput = CorbaInput {
     corbaService :: FilePath
   , corbaData :: [FilePath]
-  } deriving (Eq, Ord, Show)
+  } deriving (Eq, Ord, Show, Data, Typeable, Generic)
 
 data CorbaResult = CorbaResult {
     resultService :: Service
   , resultData :: [Machinator.Definition]
-  } deriving (Eq, Ord, Show)
+  } deriving (Eq, Ord, Show, Data, Typeable, Generic)
 
 corba :: CorbaInput -> EitherT CorbaError IO CorbaResult
 corba (CorbaInput sfile dfiles) = do

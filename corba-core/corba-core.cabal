@@ -16,11 +16,13 @@ library
                      , ambiata-machinator-core
                      , ambiata-p
                      , ambiata-x-eithert
+                     , ambiata-x-templatehaskell
                      , bytestring                      >= 0.10.4     && < 0.11
                      , containers                      == 0.5.*
                      , pretty-show                     == 1.6.*
                      , semigroups                      == 0.18.*
                      , text                            == 1.2.*
+                     , template-haskell
                      , transformers                    >= 0.4        && < 0.6
 
   ghc-options:
@@ -34,6 +36,7 @@ library
                        Corba.Core.Data.Service
                        Corba.Core.Data.Transport
                        Corba.Core.Syntax.Service
+                       Corba.Core.TH
 
 test-suite test
   type:                exitcode-stdio-1.0

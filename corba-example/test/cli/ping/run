@@ -1,0 +1,13 @@
+#!/bin/sh -eu
+
+# Kill spawned background tasks on script exit (ie. corba service)
+trap 'kill $(jobs -p)' EXIT
+
+PORT=$(($RANDOM%63000+2001))
+export PORT
+
+./dist/build/corba-example-service/corba-example-service &
+
+PONG=$(./dist/build/corba-example-client/corba-example-client "Hello, world!")
+
+test "$PONG" = "!dlrow ,olleH"
